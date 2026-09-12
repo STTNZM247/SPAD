@@ -1,0 +1,1 @@
+<img src="{{ asset('img/logo-s-negro.svg') }}" class="h-16 w-auto" alt="SPAD Logo">
