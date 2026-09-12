@@ -22,7 +22,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-   public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
@@ -30,18 +30,22 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        // Validamos el rol al entrar
+        // Validamos el rol y redirigimos según corresponda
         if ($user->rol === 'admin') {
             return redirect()->intended(route('admin.test-db', absolute: false));
         }
 
-        // Si no es admin, cerramos sesión de inmediato y devolvemos el error personalizado
+        if ($user->rol === 'usuario') {
+            return redirect()->intended(route('client.productos', absolute: false));
+        }
+
+        // Si el usuario está autenticado pero tiene un rol desconocido o nulo
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return back()->withErrors([
-            'email' => 'Usuario sin credenciales.',
+            'email' => 'Tu cuenta no tiene un rol válido asignado.',
         ]);
     }
 

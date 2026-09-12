@@ -5,7 +5,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use App\Http\Middleware\PreventBackHistory;
-use App\Http\Middleware\CheckAdminRole; // Asegúrate de tener este import si usas el alias admin
+use App\Http\Middleware\CheckAdminRole;
+use App\Http\Middleware\CheckClientRole; // <--- Importamos el nuevo middleware
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => CheckAdminRole::class,
+            'client' => CheckClientRole::class, // <--- Registramos el alias
             'prevent-back-history' => PreventBackHistory::class,
         ]);
     })
